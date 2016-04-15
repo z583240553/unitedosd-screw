@@ -14,44 +14,40 @@ local cmds = {
   [4] = "device_address"
 }
 
---Json的Key，用于清洁车云端显示状态
+--Json的Key，用于螺杆机状态 ScrewMachine_State 对应螺杆机云端显示表
 local status_cmds = {
-  [1] = "Socket1_TotalActivePower",     --有功总电量
-  [2] = "Socket2_TotalActivePower",           	--电压
-  [3] = "Socket3_TotalActivePower",           	--电流
-  [4] = "Socket4_TotalActivePower",       	--有功功率
-  [5] = "Socket5_TotalActivePower",       	    --当前状态
-  [6] = "Socket6_TotalActivePower",     --有功总电量
-  [7] = "Socket1_Voltage",           	--电压
-  [8] = "Socket2_Voltage",           	--电流
-  [9] = "Socket3_Voltage",       	--有功功率
-  [10] = "Socket4_Voltage",       	    --当前状态
-  [11] = "Socket5_Voltage",     --有功总电量
-  [12] = "Socket6_Voltage",           	--电压
-  [13] = "Socket1_Current",           	--电流
-  [14] = "Socket2_Current",       	--有功功率
-  [15] = "Socket3_Current",       	    --当前状态
-  [16] = "Socket4_Current",     --有功总电量
-  [17] = "Socket5_Current",           	--电压
-  [18] = "Socket6_Current",           	--电流
-  [19] = "Socket1_ActivePower",       	--有功功率
-  [20] = "Socket2_ActivePower",       	    --当前状态
-  [21] = "Socket3_ActivePower",     --有功总电量
-  [22] = "Socket4_ActivePower",           	--电压
-  [23] = "Socket5_ActivePower",           	--电流
-  [24] = "Socket6_ActivePower",       	--有功功率
-  [25] = "Socket1_RunState",       	    --当前状态
-  [26] = "Socket2_RunState",     --有功总电量
-  [27] = "Socket3_RunState",           	--电压
-  [28] = "Socket4_RunState",           	--电流
-  [29] = "Socket5_RunState",       	--有功功率
-  [30] = "Socket6_RunState",       	    --当前状态
-  [31] = "Socket1_CommState",       	    --当前状态
-  [32] = "Socket2_CommState",     --有功总电量
-  [33] = "Socket3_CommState",           	--电压
-  [34] = "Socket4_CommState",           	--电流
-  [35] = "Socket5_CommState",       	--有功功率
-  [36] = "Socket6_CommState",       	    --当前状态
+  [1] = "ScrewMachine_State_01",
+  [2] = "ScrewMachine_State_02",
+  [3] = "ScrewMachine_State_03",
+  [4] = "ScrewMachine_State_04",
+  [5] = "ScrewMachine_State_05",
+  [6] = "ScrewMachine_State_06",
+  [7] = "ScrewMachine_State_07",
+  [8] = "ScrewMachine_State_08",
+  [9] = "ScrewMachine_State_09",
+  [10] = "ScrewMachine_State_10",
+  [11] = "ScrewMachine_State_11",
+  [12] = "ScrewMachine_State_12",
+  [13] = "ScrewMachine_State_13",
+  [14] = "ScrewMachine_State_14",
+  [15] = "ScrewMachine_State_15",
+  [16] = "ScrewMachine_State_16",
+  [17] = "ScrewMachine_State_17",
+  [18] = "ScrewMachine_State_18",
+  [19] = "ScrewMachine_State_19",
+  [20] = "ScrewMachine_State_20",
+  [21] = "ScrewMachine_State_21",
+  [22] = "ScrewMachine_State_22",
+  [23] = "ScrewMachine_State_23",
+  [24] = "ScrewMachine_State_24",
+  [25] = "ScrewMachine_State_25",
+  [26] = "ScrewMachine_State_26",
+  [27] = "ScrewMachine_State_27",
+  [28] = "ScrewMachine_State_28",
+  [29] = "ScrewMachine_State_29",
+  [30] = "ScrewMachine_State_30",
+  [31] = "ScrewMachine_State_31",
+  [32] = "ScrewMachine_State_32",
 }
 
 --FCS校验
@@ -90,13 +86,24 @@ function _M.decode(payload)
 
 	--strload是全局变量，唯一的作用是在getnumber函数中使用
 	strload = payload
-
+	packet['payload'] = strload
+	packet['payload11'] = getnumber(1)
+	packet['payload22'] = getnumber(2)
+	packet['payload33'] = getnumber(3)
+	packet['payload44'] = getnumber(4)
+	packet['payload55'] = getnumber(5)
+	packet['payload66'] = getnumber(6)
+	packet['payload77'] = getnumber(7)
+	packet['payload88'] = getnumber(8)
+	packet['payload99'] = getnumber(9)
 	--前2个Byte是帧头，正常情况应该为';'和'1'
 	local head1 = getnumber(1)
 	local head2 = getnumber(2)
-
+	
 	--当帧头符合，才进行其他位的解码工作
-	if ( (head1 == 0x3B) and (head2 == 0x31) ) then
+	--[[if ( (head1 == 0x3B) and (head2 == 0x31) ) then
+
+		--return "hello world"
 
 		--数据长度
 		local templen = bit.lshift( getnumber(3) , 8 ) + getnumber(4)
@@ -118,64 +125,93 @@ function _M.decode(payload)
 		end
 
 		--数据长度
-		--packet[ cmds[0] ] = templen
+		packet[ cmds[0] ] = templen
 		--运行时长
 		packet[ cmds[1] ] = bit.lshift( getnumber(5) , 24 ) + bit.lshift( getnumber(6) , 16 ) + bit.lshift( getnumber(7) , 8 ) + getnumber(8)
 		--采集模式
-		--[[local mode = getnumber(9)
+		local mode = getnumber(9)
 		if mode == 1 then
 			packet[ cmds[2] ] = 'Mode-485'
 			else
 			packet[ cmds[2] ] = 'Mode-232'
-		end--]]
+		end
 		--func为判断是 实时数据/参数/故障 的参数
 		local func = getnumber(10)
-		if func == 1 then  --解析电量数据
-			--packet[ cmds[3] ] = 'func-status'
+		if func == 1 then  --解析状态数据
+			packet[ cmds[3] ] = 'func-status'
 			--设备modbus地址
-			--packet[ cmds[4] ] = getnumber(11)
+			packet[ cmds[4] ] = getnumber(11)
+
+			local databuff_table={} --用来暂存上传的实际状态数据
+			local bitbuff_table={}  --用来暂存运行状态1/2的每位bit值
 
 			--依次读入上传的数据
-			--有功总电量
-			for i=0,5 do
-				packet[status_cmds[i+1]] = (bit.lshift( getnumber(12+i*4) , 24 ) + bit.lshift( getnumber(13+i*4) , 16 ) + bit.lshift( getnumber(14+i*4) , 8 ) + getnumber(15+i*4))/10
+			for i=1,(templen-7)/2,1 do
+				databuff_table[i] = bit.lshift( getnumber(10+i*2) , 8 ) + getnumber(11+i*2)
 			end
-			--电压
-			for i=0,5 do
-				packet[status_cmds[i+7]] = (bit.lshift( getnumber(36+i*2) , 8 ) + getnumber(37+i*2))/10
+
+			--将上传的数据转化为JSON格式数据 上传协议中前5个状态寄存器数据
+			packet[ status_cmds[1] ] = databuff_table[1]/100
+			packet[ status_cmds[2] ] = databuff_table[2]-20
+			packet[ status_cmds[3] ] = databuff_table[3]
+			packet[ status_cmds[4] ] = databuff_table[4]
+			packet[ status_cmds[5] ] = databuff_table[5]/10
+
+			--将上传的数据转化为JSON格式数据 上传协议中后5个状态寄存器数据
+			for i=1,5,1 do
+				packet[ status_cmds[5+i] ] = databuff_table[10+i]
 			end
-			--电流
-			for i=0,5 do
-				packet[status_cmds[i+13]] = (bit.lshift( getnumber(48+i*2) , 8 ) + getnumber(49+i*2))/100
+
+			--解析运行状态1(对应高字节databuff_table[26],低字节databuff_table[27])的每个bit位值
+			for i=0,1,1 do --两个字节
+				for j=1,8,1 do
+					-- j-1的意思是，由于j从1开始，但是移位操作应该从1左移0位，所以减一
+					bitbuff_table[i*2+j] = bit.band(databuff_table[27-i],bit.lshift(1,j-1))
+				end
 			end
-			--有功功率
-			for i=0,5 do
-				packet[status_cmds[i+19]] = bit.lshift( getnumber(60+i*2) , 8 ) + getnumber(61+i*2)
+			--将运行状态1的每位bit值转化为JSON格式数据
+			packet[ status_cmds[11] ] = bitbuff_table[1]
+			packet[ status_cmds[12] ] = bitbuff_table[2]
+			packet[ status_cmds[13] ] = bitbuff_table[4]
+			packet[ status_cmds[14] ] = bitbuff_table[5]
+			packet[ status_cmds[15] ] = bitbuff_table[6]
+			packet[ status_cmds[16] ] = bitbuff_table[7]
+			packet[ status_cmds[17] ] = bitbuff_table[8]
+			packet[ status_cmds[18] ] = bitbuff_table[9]
+			packet[ status_cmds[19] ] = bitbuff_table[10]
+			packet[ status_cmds[20] ] = bitbuff_table[15]
+			packet[ status_cmds[21] ] = bitbuff_table[16]
+
+			--解析运行状态2(对应高字节databuff_table[28],低字节databuff_table[29])的每个bit位值
+			for i=0,1,1 do --两个字节
+				for j=1,8,1 do
+					-- j-1的意思是，由于j从1开始，但是移位操作应该从1左移0位，所以减一
+					bitbuff_table[i*2+j] = bit.band(databuff_table[29-i],bit.lshift(1,j-1))
+				end
 			end
-			--运行状态
-			for i=0,5 do
-				local x = bit.band(getnumber(72),bit.lshift(1,i))
-				if(x == 0) then 
-	               packet[status_cmds[i+25]] = 0
-	            else
-	               packet[status_cmds[i+25]] = 1
-	            end 
-			end
-			--通讯状态
-			for i=0,5 do
-				local y = bit.band(getnumber(73),bit.lshift(1,i))
-				if(y == 0) then 
-	               packet[status_cmds[i+31]] = 0
-	            else
-	               packet[status_cmds[i+31]] = 1
-	            end 
-			end
+			--将运行状态2的每位bit值转化为JSON格式数据
+			packet[ status_cmds[22] ] = bitbuff_table[1]
+			packet[ status_cmds[23] ] = bitbuff_table[2]
+			packet[ status_cmds[24] ] = bitbuff_table[4]
+			packet[ status_cmds[25] ] = bitbuff_table[5]
+			packet[ status_cmds[26] ] = bitbuff_table[6]
+			packet[ status_cmds[27] ] = bitbuff_table[7]
+			packet[ status_cmds[28] ] = bitbuff_table[8]
+			packet[ status_cmds[29] ] = bitbuff_table[9]
+			packet[ status_cmds[30] ] = bitbuff_table[14]
+			packet[ status_cmds[31] ] = bitbuff_table[15]
+			packet[ status_cmds[32] ] = bitbuff_table[16]
+
+
 		end
 
 	else
 		packet['head_error'] = 'error'
+		packet['head1'] = getnumber(1)
+		packet['head2'] = getnumber(2)
+		packet['payload'] = strload
 	end
-
+    ]]
 	return Json(packet)
 end
 
