@@ -160,13 +160,15 @@ function _M.decode(payload)
 				packet[ status_cmds[5+i] ] = databuff_table[10+i]
 			end
 
-			for i=0,7 do
-				local y = bit.band(getnumber(26),bit.lshift(1,i))
-				if(y == 0) then 
-	               bitbuff_table[i+1] = 0
-	            else
-	               bitbuff_table[i+1] = 1
-	            end 
+			for j=0,1 do
+				for i=0,7 do
+					local y = bit.band(getnumber(26+j),bit.lshift(1,i))
+					if(y == 0) then 
+		               bitbuff_table[j*8+i+1] = 0
+		            else
+		               bitbuff_table[j*8+i+1] = 1
+		            end 
+				end
 			end
 			packet[ status_cmds[11] ] = bitbuff_table[1]
 			packet[ status_cmds[12] ] = bitbuff_table[2]
@@ -176,6 +178,9 @@ function _M.decode(payload)
 			packet[ status_cmds[16] ] = bitbuff_table[7]
 			packet[ status_cmds[17] ] = bitbuff_table[8]
 			packet[ status_cmds[18] ] = bitbuff_table[9]
+			packet[ status_cmds[19] ] = bitbuff_table[10]
+			packet[ status_cmds[20] ] = bitbuff_table[15]
+			packet[ status_cmds[21] ] = bitbuff_table[16]
 			--[[--解析运行状态1(对应高字节databuff_table[26],低字节databuff_table[27])的每个bit位值
 			for i=0,1 do --两个字节
 				for j=1,8 do
