@@ -103,7 +103,7 @@ function _M.decode(payload)
 	--当帧头符合，才进行其他位的解码工作
 	if ( (head1 == 0x3B) and (head2 == 0x31) ) then
 
-		--return "hello world"
+		return "hello world"
 
 		--数据长度
 		local templen = bit.lshift( getnumber(3) , 8 ) + getnumber(4)
