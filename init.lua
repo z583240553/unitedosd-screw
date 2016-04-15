@@ -86,22 +86,22 @@ function _M.decode(payload)
 
 	--strload是全局变量，唯一的作用是在getnumber函数中使用
 	strload = payload
-	packet['payload'] = strload
-	packet['payload11'] = getnumber(1)
-	packet['payload22'] = getnumber(2)
-	packet['payload33'] = getnumber(3)
-	packet['payload44'] = getnumber(4)
-	packet['payload55'] = getnumber(5)
-	packet['payload66'] = getnumber(6)
-	packet['payload77'] = getnumber(7)
-	packet['payload88'] = getnumber(8)
-	packet['payload99'] = getnumber(9)
+--	packet['payload'] = strload
+--	packet['payload11'] = getnumber(1)
+--	packet['payload22'] = getnumber(2)
+--	packet['payload33'] = getnumber(3)
+--	packet['payload44'] = getnumber(4)
+--	packet['payload55'] = getnumber(5)
+--	packet['payload66'] = getnumber(6)
+--	packet['payload77'] = getnumber(7)
+--	packet['payload88'] = getnumber(8)
+--	packet['payload99'] = getnumber(9)
 	--前2个Byte是帧头，正常情况应该为';'和'1'
 	local head1 = getnumber(1)
 	local head2 = getnumber(2)
 	
 	--当帧头符合，才进行其他位的解码工作
-	--[[if ( (head1 == 0x3B) and (head2 == 0x31) ) then
+	if ( (head1 == 0x3B) and (head2 == 0x31) ) then
 
 		--return "hello world"
 
@@ -166,7 +166,12 @@ function _M.decode(payload)
 			for i=0,1,1 do --两个字节
 				for j=1,8,1 do
 					-- j-1的意思是，由于j从1开始，但是移位操作应该从1左移0位，所以减一
-					bitbuff_table[i*2+j] = bit.band(databuff_table[27-i],bit.lshift(1,j-1))
+					local x = bit.band(getnumber[27-i],bit.lshift(1,j-1))
+					if(x==0) then 
+						bitbuff_table[i*2+j] = 0
+					else 
+						bitbuff_table[i*2+j] = 1
+					end
 				end
 			end
 			--将运行状态1的每位bit值转化为JSON格式数据
@@ -186,7 +191,12 @@ function _M.decode(payload)
 			for i=0,1,1 do --两个字节
 				for j=1,8,1 do
 					-- j-1的意思是，由于j从1开始，但是移位操作应该从1左移0位，所以减一
-					bitbuff_table[i*2+j] = bit.band(databuff_table[29-i],bit.lshift(1,j-1))
+					local y = bit.band(getnumber[29-i],bit.lshift(1,j-1))
+					if(y==0) then
+						bitbuff_table[i*2+j] = 0
+					else
+						bitbuff_table[i*2+j]  = 1
+					end
 				end
 			end
 			--将运行状态2的每位bit值转化为JSON格式数据
@@ -201,17 +211,11 @@ function _M.decode(payload)
 			packet[ status_cmds[30] ] = bitbuff_table[14]
 			packet[ status_cmds[31] ] = bitbuff_table[15]
 			packet[ status_cmds[32] ] = bitbuff_table[16]
-
-
 		end
-
 	else
 		packet['head_error'] = 'error'
-		packet['head1'] = getnumber(1)
-		packet['head2'] = getnumber(2)
-		packet['payload'] = strload
 	end
-    ]]
+    
 	return Json(packet)
 end
 
