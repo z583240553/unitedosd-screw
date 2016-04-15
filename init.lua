@@ -135,7 +135,7 @@ function _M.decode(payload)
 		end
 		--func为判断是 实时数据/参数/故障 的参数
 		local func = getnumber(10)
-		--[[if func == 1 then  --解析状态数据
+		if func == 1 then  --解析状态数据
 			packet[ cmds[3] ] = 'func-status'
 			--设备modbus地址
 			packet[ cmds[4] ] = getnumber(11)
@@ -155,7 +155,7 @@ function _M.decode(payload)
 			packet[ status_cmds[4] ] = databuff_table[4]
 			packet[ status_cmds[5] ] = databuff_table[5]/10
 
-			--将上传的数据转化为JSON格式数据 上传协议中后5个状态寄存器数据
+			--[[--将上传的数据转化为JSON格式数据 上传协议中后5个状态寄存器数据
 			for i=1,5,1 do
 				packet[ status_cmds[5+i] ] = databuff_table[10+i]
 			end
@@ -209,8 +209,8 @@ function _M.decode(payload)
 			packet[ status_cmds[30] ] = bitbuff_table[14]
 			packet[ status_cmds[31] ] = bitbuff_table[15]
 			packet[ status_cmds[32] ] = bitbuff_table[16]
+			]]
 		end
-		]]
 	else
 		packet['head_error'] = 'error'
 	end
