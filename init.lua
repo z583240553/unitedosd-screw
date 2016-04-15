@@ -160,9 +160,25 @@ function _M.decode(payload)
 				packet[ status_cmds[5+i] ] = databuff_table[10+i]
 			end
 
-			--解析运行状态1(对应高字节databuff_table[26],低字节databuff_table[27])的每个bit位值
-			for i=0,1,1 do --两个字节
-				for j=1,8,1 do
+			for i=0,7 do
+				local y = bit.band(getnumber(26),bit.lshift(1,i))
+				if(y == 0) then 
+	               bitbuff_table[i+1] = 0
+	            else
+	               bitbuff_table[i+1] = 1
+	            end 
+			end
+			packet[ status_cmds[11] ] = bitbuff_table[1]
+			packet[ status_cmds[12] ] = bitbuff_table[2]
+			packet[ status_cmds[13] ] = bitbuff_table[4]
+			packet[ status_cmds[14] ] = bitbuff_table[5]
+			packet[ status_cmds[15] ] = bitbuff_table[6]
+			packet[ status_cmds[16] ] = bitbuff_table[7]
+			packet[ status_cmds[17] ] = bitbuff_table[8]
+			packet[ status_cmds[18] ] = bitbuff_table[9]
+			--[[--解析运行状态1(对应高字节databuff_table[26],低字节databuff_table[27])的每个bit位值
+			for i=0,1 do --两个字节
+				for j=1,8 do
 					-- j-1的意思是，由于j从1开始，但是移位操作应该从1左移0位，所以减一
 					local x = bit.band(getnumber[26+i],bit.lshift(1,j-1))
 					if(x==0) then 
