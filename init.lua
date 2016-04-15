@@ -155,12 +155,12 @@ function _M.decode(payload)
 			packet[ status_cmds[4] ] = databuff_table[4]
 			packet[ status_cmds[5] ] = databuff_table[5]/10
 
-			--[[--将上传的数据转化为JSON格式数据 上传协议中后5个状态寄存器数据
+			--将上传的数据转化为JSON格式数据 上传协议中后5个状态寄存器数据
 			for i=1,5,1 do
 				packet[ status_cmds[5+i] ] = databuff_table[10+i]
 			end
 
-			--解析运行状态1(对应高字节databuff_table[26],低字节databuff_table[27])的每个bit位值
+			--[[--解析运行状态1(对应高字节databuff_table[26],低字节databuff_table[27])的每个bit位值
 			for i=0,1,1 do --两个字节
 				for j=1,8,1 do
 					-- j-1的意思是，由于j从1开始，但是移位操作应该从1左移0位，所以减一
