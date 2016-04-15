@@ -185,7 +185,7 @@ function _M.decode(payload)
 			packet[ status_cmds[20] ] = bitbuff_table[15]
 			packet[ status_cmds[21] ] = bitbuff_table[16]
 
-			--解析运行状态2(对应高字节databuff_table[28],低字节databuff_table[29])的每个bit位值
+			--[[--解析运行状态2(对应高字节databuff_table[28],低字节databuff_table[29])的每个bit位值
 			for i=0,1,1 do --两个字节
 				for j=1,8,1 do
 					-- j-1的意思是，由于j从1开始，但是移位操作应该从1左移0位，所以减一
@@ -209,6 +209,7 @@ function _M.decode(payload)
 			packet[ status_cmds[30] ] = bitbuff_table[14]
 			packet[ status_cmds[31] ] = bitbuff_table[15]
 			packet[ status_cmds[32] ] = bitbuff_table[16]
+			]]
 		end
 	else
 		packet['head_error'] = 'error'
