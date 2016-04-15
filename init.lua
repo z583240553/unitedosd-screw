@@ -86,22 +86,22 @@ function _M.decode(payload)
 
 	--strload是全局变量，唯一的作用是在getnumber函数中使用
 	strload = payload
---	packet['payload'] = strload
---	packet['payload11'] = getnumber(1)
---	packet['payload22'] = getnumber(2)
---	packet['payload33'] = getnumber(3)
---	packet['payload44'] = getnumber(4)
---	packet['payload55'] = getnumber(5)
---	packet['payload66'] = getnumber(6)
---	packet['payload77'] = getnumber(7)
---	packet['payload88'] = getnumber(8)
---	packet['payload99'] = getnumber(9)
+	packet['payload'] = strload
+	packet['payload11'] = getnumber(1)
+	packet['payload22'] = getnumber(2)
+	packet['payload33'] = getnumber(3)
+	packet['payload44'] = getnumber(4)
+	packet['payload55'] = getnumber(5)
+	packet['payload66'] = getnumber(6)
+	packet['payload77'] = getnumber(7)
+	packet['payload88'] = getnumber(8)
+	packet['payload99'] = getnumber(9)
 	--前2个Byte是帧头，正常情况应该为';'和'1'
 	local head1 = getnumber(1)
 	local head2 = getnumber(2)
 	
 	--当帧头符合，才进行其他位的解码工作
-	if ( (head1 == 0x3B) and (head2 == 0x31) ) then
+	--[[if ( (head1 == 0x3B) and (head2 == 0x31) ) then
 
 		return "hello world"
 
@@ -215,7 +215,7 @@ function _M.decode(payload)
 	else
 		packet['head_error'] = 'error'
 	end
-    
+    ]]
 	return Json(packet)
 end
 
