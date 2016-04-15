@@ -86,24 +86,22 @@ function _M.decode(payload)
 
 	--strload是全局变量，唯一的作用是在getnumber函数中使用
 	strload = payload
-	packet['payload'] = strload
-	packet['payload11'] = getnumber(1)
-	packet['payload22'] = getnumber(2)
-	packet['payload33'] = getnumber(3)
-	packet['payload44'] = getnumber(4)
-	packet['payload55'] = getnumber(5)
-	packet['payload66'] = getnumber(6)
-	packet['payload77'] = getnumber(7)
-	packet['payload88'] = getnumber(8)
-	packet['payload99'] = getnumber(9)
+	--packet['payload'] = strload
+	--packet['payload11'] = getnumber(1)
+	--packet['payload22'] = getnumber(2)
+	--packet['payload33'] = getnumber(3)
+	--packet['payload44'] = getnumber(4)
+	--packet['payload55'] = getnumber(5)
+	--packet['payload66'] = getnumber(6)
+	--packet['payload77'] = getnumber(7)
+	--packet['payload88'] = getnumber(8)
+	--packet['payload99'] = getnumber(9)
 	--前2个Byte是帧头，正常情况应该为';'和'1'
 	local head1 = getnumber(1)
 	local head2 = getnumber(2)
 	
 	--当帧头符合，才进行其他位的解码工作
-	--[[if ( (head1 == 0x3B) and (head2 == 0x31) ) then
-
-		return "hello world"
+	if ( (head1 == 0x3B) and (head2 == 0x31) ) then
 
 		--数据长度
 		local templen = bit.lshift( getnumber(3) , 8 ) + getnumber(4)
@@ -137,7 +135,7 @@ function _M.decode(payload)
 		end
 		--func为判断是 实时数据/参数/故障 的参数
 		local func = getnumber(10)
-		if func == 1 then  --解析状态数据
+		--[[if func == 1 then  --解析状态数据
 			packet[ cmds[3] ] = 'func-status'
 			--设备modbus地址
 			packet[ cmds[4] ] = getnumber(11)
@@ -212,10 +210,11 @@ function _M.decode(payload)
 			packet[ status_cmds[31] ] = bitbuff_table[15]
 			packet[ status_cmds[32] ] = bitbuff_table[16]
 		end
+		]]
 	else
 		packet['head_error'] = 'error'
 	end
-    ]]
+    
 	return Json(packet)
 end
 
