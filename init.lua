@@ -77,12 +77,6 @@ end
 --解码 /out 频道的数据包
 function _M.decode(payload)
 	local packet = {['status']='not'}
-
-	local head = string.sub(strload,3,6)
-	if(head == 'IMSI') then
-		packet['status'] = 'Heartbeat packet'
-		return Json(packet)
-	end
 		
 	--FCS校验的数组(table)，用于逐个存储每个Byte的数值
 	local FCS_Array = {}
@@ -206,9 +200,13 @@ function _M.decode(payload)
 			packet[ status_cmds[32] ] = bitbuff_table[16]
 		end
 	else 
-		packet['head_error'] = 'error'
+		local head = string.sub(strload,3,6)
+		if(head == 'IMSI') then
+			packet['status'] = 'Heartbeat packet'
+		else
+			packet['head_error'] = 'error'
+		end	
 	end
-    
 	return Json(packet)
 end
 
