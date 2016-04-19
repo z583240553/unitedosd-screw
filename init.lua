@@ -201,6 +201,7 @@ function _M.decode(payload)
 		end
 	else 
 		local head = string.sub(strload,5,4)
+		packet['head'] = head
 		packet['payload'] = strload
 		packet['head_error'] = 'error'
 	end
