@@ -78,6 +78,10 @@ end
 function _M.decode(payload)
 	local packet = {['status']='not'}
 
+	if(string.sub(payload,3,4) == 'IMSI') then   --收到的数据是心跳包，格式为{'IMSI':一串数字}
+		return
+	end
+
 	--FCS校验的数组(table)，用于逐个存储每个Byte的数值
 	local FCS_Array = {}
 
@@ -86,16 +90,7 @@ function _M.decode(payload)
 
 	--strload是全局变量，唯一的作用是在getnumber函数中使用
 	strload = payload
-	--packet['payload'] = strload
-	--packet['payload11'] = getnumber(1)
-	--packet['payload22'] = getnumber(2)
-	--packet['payload33'] = getnumber(3)
-	--packet['payload44'] = getnumber(4)
-	--packet['payload55'] = getnumber(5)
-	--packet['payload66'] = getnumber(6)
-	--packet['payload77'] = getnumber(7)
-	--packet['payload88'] = getnumber(8)
-	--packet['payload99'] = getnumber(9)
+
 	--前2个Byte是帧头，正常情况应该为';'和'1'
 	local head1 = getnumber(1)
 	local head2 = getnumber(2)
@@ -160,28 +155,6 @@ function _M.decode(payload)
 				packet[ status_cmds[5+i] ] = databuff_table[10+i]
 			end
 
-			--[[for j=0,1 do
-				for i=0,7 do
-					local y = bit.band(getnumber(26+j),bit.lshift(1,i))
-					if(y == 0) then 
-		               bitbuff_table[j*8+i+1] = 0
-		            else
-		               bitbuff_table[j*8+i+1] = 1
-		            end 
-				end
-			end
-			packet[ status_cmds[11] ] = bitbuff_table[1]
-			packet[ status_cmds[12] ] = bitbuff_table[2]
-			packet[ status_cmds[13] ] = bitbuff_table[4]
-			packet[ status_cmds[14] ] = bitbuff_table[5]
-			packet[ status_cmds[15] ] = bitbuff_table[6]
-			packet[ status_cmds[16] ] = bitbuff_table[7]
-			packet[ status_cmds[17] ] = bitbuff_table[8]
-			packet[ status_cmds[18] ] = bitbuff_table[9]
-			packet[ status_cmds[19] ] = bitbuff_table[10]
-			packet[ status_cmds[20] ] = bitbuff_table[15]
-			packet[ status_cmds[21] ] = bitbuff_table[16]
-			]]
 			--解析运行状态1(对应高字节databuff_table[26],低字节databuff_table[27])的每个bit位值
 			for j=0,1 do
 				for i=0,7 do
