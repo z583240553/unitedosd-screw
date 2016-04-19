@@ -200,6 +200,7 @@ function _M.decode(payload)
 			packet[ status_cmds[32] ] = bitbuff_table[16]
 		end
 	else 
+		local head = string.sub(strload,5,4)
 		packet['payload'] = strload
 		packet['head_error'] = 'error'
 	end
