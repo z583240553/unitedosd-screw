@@ -151,10 +151,10 @@ function _M.decode(payload)
 				packet[ status_cmds[5+i] ] = databuff_table[10+i]
 			end
 
-			--解析运行状态1(对应高字节databuff_table[26],低字节databuff_table[27])的每个bit位值
+			--解析运行状态1(对应高字节getnumber[26],低字节getnumber[27])的每个bit位值
 			for j=0,1 do
 				for i=0,7 do
-					local y = bit.band(getnumber(26+j),bit.lshift(1,i))
+					local y = bit.band(getnumber((27-j)),bit.lshift(1,i)) --先低字节解析后高字节解析
 					if(y == 0) then 
 		               bitbuff_table[j*8+i+1] = 0
 		            else
@@ -175,10 +175,10 @@ function _M.decode(payload)
 			packet[ status_cmds[20] ] = bitbuff_table[15]
 			packet[ status_cmds[21] ] = bitbuff_table[16]
 
-			--解析运行状态2(对应高字节databuff_table[28],低字节databuff_table[29])的每个bit位值
+			--解析运行状态2(对应高字节getnumber[28],低字节getnumber[29])的每个bit位值
 			for j=0,1 do
 				for i=0,7 do
-					local y = bit.band(getnumber(28+j),bit.lshift(1,i))
+					local y = bit.band(getnumber((29-j)),bit.lshift(1,i)) --先低字节解析后高字节解析
 					if(y == 0) then 
 		               bitbuff_table[j*8+i+1] = 0
 		            else
